@@ -1,0 +1,15 @@
+services:
+  social-db:
+    image: postgres:16-alpine
+    container_name: social-db-pg
+    environment:
+      POSTGRES_PASSWORD: social
+      POSTGRES_DB: social
+      POSTGRES_USER: social
+    ports:
+      - '5439:5432'
+    volumes:
+      - social_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  social_postgres_data:

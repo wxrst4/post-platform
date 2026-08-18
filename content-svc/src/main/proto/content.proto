@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.example.contentsvc.grpc";
+
+service ContentService {
+  rpc GetPost(PostRequest) returns (PostResponse);
+  rpc GetChannel(ChannelRequest) returns (ChannelResponse);
+
+  rpc GetPublishedPostsByChannels(PublishedPostsRequest) returns (PublishedPostsResponse);
+}
+
+message PostRequest {
+  string post_id = 1;
+}
+
+message PostResponse {
+  bool exists = 1;
+  string post_id = 2;
+  string channel_id = 3;
+  string author_id = 4;
+  string title = 5;
+  string content = 6;
+  string status = 7;
+  string published_at = 8;
+}
+
+message ChannelRequest {
+  string channel_id = 1;
+}
+
+message ChannelResponse {
+  bool exists = 1;
+  string channel_id = 2;
+  string owner_id = 3;
+  string name = 4;
+}
+
+message PublishedPostsRequest {
+  repeated string channel_ids = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+message PublishedPostsResponse {
+  repeated PostResponse posts = 1;
+}

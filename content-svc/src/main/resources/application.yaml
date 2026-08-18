@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: content-svc
+  main:
+    banner-mode: off
+
+  grpc:
+    server:
+      port: 9091
+
+  datasource:
+    username: content
+    password: content
+    url: jdbc:postgresql://localhost:5430/content
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: content
+    open-in-view: false
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    default-schema: public
+    liquibase-schema: public
+
+app:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer-auto-startup: true
+    topics:
+      post-published:
+        topic: content.post.published.v1
+        partition: 3
+
+  jwt:
+    secret: asdfjhsadfuyqweuryqwyer987qweroiqwuefohsakjdhfsaheiufyqwer
+
+  s3:
+    access-key: minioadmin
+    secret-key: minioadmin
+    bucket: post-platform-post
+    regions: us-east-1
+    endpoint: http://localhost:9000
+    public-endpoint: http://localhost:9000
+    path-style-access: true
+    download-url-ttl: 15m
+
+server:
+  port: 8082

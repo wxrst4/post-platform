@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: feed-svc
+  main:
+    banner-mode: off
+
+  grpc:
+    client:
+      social:
+        target: static://localhost:9093
+
+      content:
+        target: static://localhost:9091
+
+app:
+  jwt:
+    secret: asdfjhsadfuyqweuryqwyer987qweroiqwuefohsakjdhfsaheiufyqwer
+
+server:
+  port: 8086

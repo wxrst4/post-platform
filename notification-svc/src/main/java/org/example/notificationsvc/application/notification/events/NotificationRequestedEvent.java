@@ -1,0 +1,16 @@
+package org.example.notificationsvc.application.notification.events;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+public record NotificationRequestedEvent(
+        UUID eventId,
+        String type,
+        UUID recipientId,
+        UUID postId,
+        UUID channelId,
+        String postTitle,
+        String title,
+        LocalDateTime createdAt
+) {
+}

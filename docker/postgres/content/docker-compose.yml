@@ -1,0 +1,15 @@
+services:
+  content-db:
+    image: postgres:16-alpine
+    container_name: content-db-pg
+    environment:
+      POSTGRES_PASSWORD: content
+      POSTGRES_DB: content
+      POSTGRES_USER: content
+    ports:
+      - '5430:5432'
+    volumes:
+      - content_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  content_postgres_data:

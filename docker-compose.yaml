@@ -1,0 +1,12 @@
+name: post-platform
+include:
+  - path: ./docker/postgres/user/docker-compose.yml
+  - path: ./docker/postgres/notification/docker-compose.yml
+  - path: ./docker/postgres/content/docker-compose.yml
+  - path: ./docker/postgres/social/docker-compose.yml
+  - path: ./docker/kafka/docker-compose.yml
+  - path: ./docker/s3/docker-compose.yml
+
+networks:
+  default:
+    name: post-platform-local

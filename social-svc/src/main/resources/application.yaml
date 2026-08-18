@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: social-svc
+  main:
+    banner-mode: off
+
+  grpc:
+    client:
+      channel:
+        content:
+          target: static://localhost:9091
+    server:
+      port: 9093
+
+
+  datasource:
+    username: social
+    password: social
+    url: jdbc:postgresql://localhost:5439/social
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: social
+    open-in-view: false
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    default-schema: public
+    liquibase-schema: public
+
+app:
+  jwt:
+    secret: asdfjhsadfuyqweuryqwyer987qweroiqwuefohsakjdhfsaheiufyqwer
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer-auto-startup: true
+    topics:
+      post-published:
+        topic: content.post.published.v1
+        partitions: 3
+        group-id: social.content-events
+
+      notification-requested:
+        topic: social.notification.requested.v1
+        partitions: 3
+
+server:
+  port: 8083
