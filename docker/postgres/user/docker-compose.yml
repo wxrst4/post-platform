@@ -2,14 +2,25 @@ services:
   user-db:
     image: postgres:16-alpine
     container_name: user-db-pg
+
     environment:
       POSTGRES_PASSWORD: user
       POSTGRES_DB: user
       POSTGRES_USER: user
+
     ports:
-      - '5432:5432'
+      - "5432:5432"
+
     volumes:
       - user_postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U user -d user
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   user_postgres_data:

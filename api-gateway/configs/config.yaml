@@ -1,0 +1,189 @@
+server:
+  host: "0.0.0.0"
+  port: 8080
+  read_timeout: 30s
+  write_timeout: 30s
+  idle_timeout: 60s
+
+logger:
+  mode: "dev"
+  level: "DEBUG"
+
+gateway:
+  routes:
+
+    - name: user-auth
+      path_prefix: /api/v1/auth
+      strip_prefix: ""
+      methods:
+        - POST
+      required_headers: []
+      pass_headers:
+        - X-Request-ID
+        - Content-Type
+        - Authorization
+      add_headers:
+        X-Gateway: "go-api-gateway"
+      load_balancing:
+        strategy: round_robin
+      upstream:
+        - url: http://localhost:8090
+
+    - name: content-channels
+      path_prefix: /api/v1/channels
+      strip_prefix: ""
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+      required_headers: []
+      pass_headers:
+        - X-Request-ID
+        - Content-Type
+        - Authorization
+      add_headers:
+        X-Gateway: "go-api-gateway"
+      load_balancing:
+        strategy: round_robin
+      upstream:
+        - url: http://localhost:8082
+
+    - name: content-posts
+      path_prefix: /api/v1/posts
+      strip_prefix: ""
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+      required_headers: []
+      pass_headers:
+        - X-Request-ID
+        - Content-Type
+        - Authorization
+      add_headers:
+        X-Gateway: "go-api-gateway"
+      load_balancing:
+        strategy: round_robin
+      upstream:
+        - url: http://localhost:8082
+
+    - name: content-media
+      path_prefix: /api/v1/media
+      strip_prefix: ""
+      methods:
+        - GET
+        - POST
+        - DELETE
+      required_headers:
+        - Authorization
+      pass_headers:
+        - X-Request-ID
+        - Content-Type
+        - Authorization
+      add_headers:
+        X-Gateway: "go-api-gateway"
+      load_balancing:
+        strategy: round_robin
+      upstream:
+        - url: http://localhost:8082
+
+    - name: social-subscriptions
+      path_prefix: /api/v1/subscriptions
+      strip_prefix: ""
+      methods:
+        - GET
+        - POST
+        - DELETE
+      required_headers:
+        - Authorization
+      pass_headers:
+        - X-Request-ID
+        - Content-Type
+        - Authorization
+      add_headers:
+        X-Gateway: "go-api-gateway"
+      load_balancing:
+        strategy: round_robin
+      upstream:
+        - url: http://localhost:8083
+
+    - name: social-likes
+      path_prefix: /api/v1/likes
+      strip_prefix: ""
+      methods:
+        - GET
+        - POST
+        - DELETE
+      required_headers:
+        - Authorization
+      pass_headers:
+        - X-Request-ID
+        - Content-Type
+        - Authorization
+      add_headers:
+        X-Gateway: "go-api-gateway"
+      load_balancing:
+        strategy: round_robin
+      upstream:
+        - url: http://localhost:8083
+
+    - name: social-comments
+      path_prefix: /api/v1/comments
+      strip_prefix: ""
+      methods:
+        - GET
+        - POST
+        - DELETE
+      required_headers:
+        - Authorization
+      pass_headers:
+        - X-Request-ID
+        - Content-Type
+        - Authorization
+      add_headers:
+        X-Gateway: "go-api-gateway"
+      load_balancing:
+        strategy: round_robin
+      upstream:
+        - url: http://localhost:8083
+
+    - name: feed-service
+      path_prefix: /api/v1/feed
+      strip_prefix: ""
+      methods:
+        - GET
+      required_headers:
+        - Authorization
+      pass_headers:
+        - X-Request-ID
+        - Content-Type
+        - Authorization
+      add_headers:
+        X-Gateway: "go-api-gateway"
+      load_balancing:
+        strategy: round_robin
+      upstream:
+        - url: http://localhost:8086
+
+    - name: notification-service
+      path_prefix: /api/v1/notifications
+      strip_prefix: ""
+      methods:
+        - GET
+        - PATCH
+      required_headers:
+        - Authorization
+      pass_headers:
+        - X-Request-ID
+        - Content-Type
+        - Authorization
+      add_headers:
+        X-Gateway: "go-api-gateway"
+      load_balancing:
+        strategy: round_robin
+      upstream:
+        - url: http://localhost:8081

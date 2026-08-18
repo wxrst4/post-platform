@@ -28,4 +28,4 @@ app:
     expiration-access: ${EXPIRATION_ACCESS:90000}
     expiration-refresh: ${EXPIRATION_REFRESH:2592000000}
 server:
-  port: 8080
+  port: 8090

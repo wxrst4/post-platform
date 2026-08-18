@@ -1,11 +1,175 @@
 name: post-platform
+
 include:
   - path: ./docker/postgres/user/docker-compose.yml
   - path: ./docker/postgres/notification/docker-compose.yml
   - path: ./docker/postgres/content/docker-compose.yml
   - path: ./docker/postgres/social/docker-compose.yml
-  - path: ./docker/kafka/docker-compose.yml
   - path: ./docker/s3/docker-compose.yml
+  - path: ./docker/kafka/docker-compose.yml
+  - path: ./docker/prometheus/docker-compose.yml
+
+services:
+
+  user-svc:
+    build:
+      context: ./user-svc
+      dockerfile: Dockerfile
+    container_name: post-platform-user-svc
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8090
+      SPRING_DATASOURCE_URL: jdbc:postgresql://user-db:5432/user
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: user
+      JWT_SECRET: asdfjhsadfuyqweuryqwyer987qweroiqwuefohsakjdhfsaheiufyqwer
+    depends_on:
+      user-db:
+        condition: service_healthy
+    expose:
+      - "8090"
+    restart: unless-stopped
+
+  notification-svc:
+    build:
+      context: ./notification-svc
+      dockerfile: Dockerfile
+    container_name: post-platform-notification-svc
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:postgresql://notification-db:5432/notification
+      SPRING_DATASOURCE_USERNAME: notification
+      SPRING_DATASOURCE_PASSWORD: notification
+      APP_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      notification-db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    expose:
+      - "8081"
+    restart: unless-stopped
+
+  content-svc:
+    build:
+      context: ./content-svc
+      dockerfile: Dockerfile
+    container_name: post-platform-content-svc
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8082
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://content-db:5432/content
+      SPRING_DATASOURCE_USERNAME: content
+      SPRING_DATASOURCE_PASSWORD: content
+
+      SPRING_GRPC_SERVER_PORT: 9091
+
+      APP_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+
+      JWT_SECRET: asdfjhsadfuyqweuryqwyer987qweroiqwuefohsakjdhfsaheiufyqwer
+
+      APP_S3_ACCESS_KEY: minioadmin
+      APP_S3_SECRET_KEY: minioadmin
+      APP_S3_BUCKET: post-platform-posts
+      APP_S3_REGIONS: us-east-1
+      APP_S3_ENDPOINT: http://minio:9000
+      APP_S3_PUBLIC_ENDPOINT: http://localhost:9000
+      APP_S3_PATH_STYLE_ACCESS: "true"
+      APP_S3_DOWNLOAD_URL_TTL: 15m
+
+    depends_on:
+      content-db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      minio:
+        condition: service_started
+
+    expose:
+      - "8082"
+      - "9091"
+    restart: unless-stopped
+
+  social-svc:
+    build:
+      context: ./social-svc
+      dockerfile: Dockerfile
+    container_name: post-platform-social-svc
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8083
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://social-db:5432/social
+      SPRING_DATASOURCE_USERNAME: social
+      SPRING_DATASOURCE_PASSWORD: social
+
+      SPRING_GRPC_SERVER_PORT: 9093
+      SPRING_GRPC_CLIENT_CHANNEL_CONTENT_TARGET: static://content-svc:9091
+
+      APP_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+
+      JWT_SECRET: asdfjhsadfuyqweuryqwyer987qweroiqwuefohsakjdhfsaheiufyqwer
+
+    depends_on:
+      social-db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      content-svc:
+        condition: service_started
+
+    expose:
+      - "8083"
+      - "9093"
+    restart: unless-stopped
+
+  feed-svc:
+    build:
+      context: ./feed-svc
+      dockerfile: Dockerfile
+    container_name: post-platform-feed-svc
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8086
+
+      SPRING_GRPC_CLIENT_CONTENT_TARGET: static://content-svc:9091
+      SPRING_GRPC_CLIENT_SOCIAL_TARGET: static://social-svc:9093
+
+      JWT_SECRET: asdfjhsadfuyqweuryqwyer987qweroiqwuefohsakjdhfsaheiufyqwer
+
+    depends_on:
+      content-svc:
+        condition: service_started
+      social-svc:
+        condition: service_started
+
+    expose:
+      - "8086"
+    restart: unless-stopped
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: post-platform-api-gateway
+    environment:
+      CONFIG_PATH: /app/configs/config-docker.yaml
+    depends_on:
+      user-svc:
+        condition: service_started
+      notification-svc:
+        condition: service_started
+      content-svc:
+        condition: service_started
+      social-svc:
+        condition: service_started
+      feed-svc:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
 
 networks:
   default:

@@ -15,13 +15,13 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/posts")
+@RequestMapping("/api/v1/comments")
 public class CommentController {
 
     private final CommentService commentService;
     private final CommentMapper commentMapper;
 
-    @PostMapping("/{postId}/comments")
+    @PostMapping("/posts/{postId}")
     public ResponseEntity<CommentResponse> addComment(
             @PathVariable UUID postId,
             @Valid @RequestBody CreateCommentRequest request) {
@@ -30,14 +30,14 @@ public class CommentController {
         return ResponseEntity.ok(commentMapper.toResponse(comment));
     }
 
-    @GetMapping("/{postId}/comments")
+    @GetMapping("/posts/{postId}")
     public ResponseEntity<List<CommentResponse>> getAllComments(@PathVariable UUID postId) {
         List<Comment> comments = commentService.findByPost(postId);
 
         return ResponseEntity.ok(commentMapper.toResponse(comments));
     }
 
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable UUID commentId) {
         commentService.deleteComment(commentId);
         return ResponseEntity.noContent().build();

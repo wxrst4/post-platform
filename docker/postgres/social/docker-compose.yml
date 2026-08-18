@@ -11,5 +11,13 @@ services:
     volumes:
       - social_postgres_data:/var/lib/postgresql/data
 
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U social -d social
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
 volumes:
   social_postgres_data:

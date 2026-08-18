@@ -11,5 +11,13 @@ services:
     volumes:
       - content_postgres_data:/var/lib/postgresql/data
 
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U content -d content
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
 volumes:
   content_postgres_data:
