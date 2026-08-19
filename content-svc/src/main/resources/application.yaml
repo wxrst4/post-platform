@@ -41,9 +41,9 @@ app:
   s3:
     access-key: minioadmin
     secret-key: minioadmin
-    bucket: post-platform-post
+    bucket: post-platform-posts
     regions: us-east-1
-    endpoint: http://localhost:9000
+    endpoint: http://minio:9000
     public-endpoint: http://localhost:9000
     path-style-access: true
     download-url-ttl: 15m

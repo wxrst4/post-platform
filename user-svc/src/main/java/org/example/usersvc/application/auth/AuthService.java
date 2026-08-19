@@ -49,7 +49,6 @@ public class AuthService {
         String username = jwtService.extractUsername(request.refreshToken());
         UserPrincipal userPrincipal = (UserPrincipal) userService.loadUserByUsername(username);
 
-
         if (!jwtService.isValid(request.refreshToken(), userPrincipal)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "invalid_refresh_token");
         }

@@ -1,6 +1,7 @@
 package org.example.feedsvc.application.feed;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.contentsvc.grpc.PostResponse;
 import org.example.feedsvc.infrastructure.grpc.ContentGrpcClient;
 import org.example.feedsvc.infrastructure.grpc.SocialGrpcClient;
@@ -10,9 +11,12 @@ import org.example.feedsvc.presentation.http.feed.dto.FeedResponse;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FeedService {
@@ -32,6 +36,15 @@ public class FeedService {
 
         List<PostResponse> posts = contentGrpcClient.getPublishedPosts(channelIds, size, offset);
 
+        posts.forEach(post -> log.info(
+                "Feed post: id={}, channelId={}, authorId={}, status={}, publishedAt='{}'",
+                post.getPostId(),
+                post.getChannelId(),
+                post.getAuthorId(),
+                post.getStatus(),
+                post.getPublishedAt()
+        ));
+
         List<FeedItem> items = posts.stream()
                 .map(this::toFeedItem)
                 .toList();
@@ -46,7 +59,19 @@ public class FeedService {
                 UUID.fromString(post.getAuthorId()),
                 post.getTitle(),
                 post.getContent(),
-                Instant.parse(post.getPublishedAt())
+                parsePublishedAt(post.getPublishedAt())
         );
+    }
+
+    private Instant parsePublishedAt(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        try {
+            return Instant.parse(value);
+        } catch (Exception ignored) {
+            return LocalDateTime.parse(value).toInstant(ZoneOffset.UTC);
+        }
     }
 }

@@ -10,10 +10,9 @@ import java.util.UUID;
 public class CurrentUserProvider {
 
     public UUID getUserId() {
-        UserPrincipal principal =
-                (UserPrincipal) Objects.requireNonNull(
-                        SecurityContextHolder.getContext().getAuthentication()
-                ).getPrincipal();
+        UserPrincipal principal = (UserPrincipal) Objects.requireNonNull(
+                SecurityContextHolder.getContext().getAuthentication()
+        ).getPrincipal();
 
         return Objects.requireNonNull(principal).getUserId();
     }

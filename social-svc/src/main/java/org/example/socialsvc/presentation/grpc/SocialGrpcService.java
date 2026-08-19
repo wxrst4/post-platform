@@ -44,7 +44,6 @@ public class SocialGrpcService extends SocialServiceGrpc.SocialServiceImplBase {
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         } catch (IllegalArgumentException exception) {
-
             responseObserver.onError(
                     Status.INVALID_ARGUMENT.withDescription("Invalid userId").asRuntimeException()
             );

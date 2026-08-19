@@ -27,12 +27,8 @@ public class S3Config {
 
     @Bean
     public S3Presigner s3Presigner(S3Properties properties) {
-        var endpoint = properties.publicEndpoint() == null || properties.publicEndpoint().isBlank()
-                ? properties.endpoint()
-                : properties.publicEndpoint();
-
         return S3Presigner.builder()
-                .endpointOverride(URI.create(endpoint))
+                .endpointOverride(URI.create(properties.publicEndpoint()))
                 .region(Region.of(properties.regions()))
                 .credentialsProvider(credentialsProvider(properties))
                 .serviceConfiguration(s3Configuration(properties))
@@ -47,7 +43,7 @@ public class S3Config {
 
     private S3Configuration s3Configuration(S3Properties properties) {
         return S3Configuration.builder()
-                .pathStyleAccessEnabled(properties.pathStyleAccess())
+                .pathStyleAccessEnabled(Boolean.TRUE.equals(properties.pathStyleAccess()))
                 .build();
     }
 }

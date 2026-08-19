@@ -4,17 +4,14 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9e2bd872-d559-4379-8ce2-7edf4c3d9c44" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/configs/config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../social-svc/src/main/java/org/example/socialsvc/presentation/comment/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../social-svc/src/main/java/org/example/socialsvc/presentation/comment/CommentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../user-svc/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../user-svc/src/main/resources/application.yaml" afterDir="false" />
-    </list>
+    <list default="true" id="9e2bd872-d559-4379-8ce2-7edf4c3d9c44" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="29" />
   </component>
   <component name="GOROOT" url="file://$USER_HOME$/sdk/go1.26.6" />
   <component name="Git.Settings">
@@ -79,7 +76,7 @@
   </component>
   <component name="RunManager" selected="Go Build.go build github.com/BaronPipistron/go-api-gateway/cmd/gateway">
     <configuration name="go build github.com/BaronPipistron/go-api-gateway/cmd/gateway" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
-      <module name="go-api-gateway 2" />
+      <module name="api-gateway" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
       <package value="github.com/BaronPipistron/go-api-gateway/cmd/gateway" />

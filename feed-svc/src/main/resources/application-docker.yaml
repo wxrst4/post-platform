@@ -2,17 +2,18 @@ spring:
   application:
     name: feed-svc
 
-  main:
-    banner-mode: off
+  config:
+    activate:
+      on-profile: docker
 
   grpc:
     client:
       channel:
         social:
-          target: static://localhost:9093
+          target: static://social-svc:9093
 
         content:
-          target: static://localhost:9091
+          target: static://content-svc:9091
 
 app:
   jwt:

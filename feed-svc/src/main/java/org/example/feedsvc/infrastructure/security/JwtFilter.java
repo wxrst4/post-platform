@@ -39,17 +39,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             UserPrincipal principal = jwtService.parseToken(token);
-            var authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            principal,
-                            null,
-                            principal.getAuthorities()
-                    );
-
+            var authentication = new UsernamePasswordAuthenticationToken(
+                    principal,
+                    null,
+                    principal.getAuthorities()
+            );
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
         } catch (Exception e) {
-            log.error("JWT authentication error", e);
+            log.error("JWT authentication error: {}", e.getMessage(), e);
             response.sendError(
                     HttpServletResponse.SC_UNAUTHORIZED,
                     "Invalid or expired token"
