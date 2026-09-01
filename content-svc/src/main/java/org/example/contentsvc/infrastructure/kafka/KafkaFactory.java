@@ -25,12 +25,11 @@ public class KafkaFactory {
     }
 
     public <T> KafkaTemplate<String, T> template(String name) {
-        var producerFactory =
-                new DefaultKafkaProducerFactory<String, T>(
-                        producerProperties(name),
-                        new StringSerializer(),
-                        serializer()
-                );
+        var producerFactory = new DefaultKafkaProducerFactory<String, T>(
+                producerProperties(name),
+                new StringSerializer(),
+                serializer()
+        );
 
         return new KafkaTemplate<>(producerFactory);
     }
